@@ -5,6 +5,7 @@ import Collapse from "./components/Collapse/Collapse.vue";
 import Item from "./components/Collapse/CollapseItem.vue";
 import type { ButtonInstance } from "./components/Button/types";
 const buttonRef = ref<ButtonInstance | null>(null);
+const openValue = ref(["a"]);
 onMounted(() => {
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
@@ -41,7 +42,7 @@ onMounted(() => {
     <Button type="danger" plain>Danger</Button><br /><br />
     <Button size="large">Large</Button>
     <Button size="small">Small</Button>
-    <Collapse>
+    <Collapse v-model="openValue" accordion>
       <Item name="a">
         <template #title>
           <h1>nice title</h1>
@@ -56,6 +57,7 @@ onMounted(() => {
         <div>this is cccc test</div>
       </Item>
     </Collapse>
+    {{ openValue }}
   </main>
 </template>
 

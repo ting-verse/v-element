@@ -29,8 +29,8 @@ import { collapseContextKey } from "./types";
 defineOptions({
   name: "VkCollapseItem",
 });
-const props = defineProps<CollapseItemProps>();
 
+const props = defineProps<CollapseItemProps>();
 const collapseContext = inject(collapseContextKey);
 const isActive = computed(() =>
   collapseContext?.activeNames.value.includes(props.name)
