@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import Button from './components/Button/Button.vue'
-import type { ButtonInstance } from './components/Button/types'
-const buttonRef = ref<ButtonInstance | null>(null)
+import { ref, onMounted } from "vue";
+import Button from "./components/Button/Button.vue";
+import Collapse from "./components/Collapse/Collapse.vue";
+import Item from "./components/Collapse/CollapseItem.vue";
+import type { ButtonInstance } from "./components/Button/types";
+const buttonRef = ref<ButtonInstance | null>(null);
 onMounted(() => {
   if (buttonRef.value) {
-    console.log('buttonRef', buttonRef.value.ref)
+    console.log("buttonRef", buttonRef.value.ref);
   }
-})
+});
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <img
+      alt="Vue logo"
+      class="logo"
+      src="./assets/logo.svg"
+      width="125"
+      height="125"
+    />
   </header>
 
   <main>
@@ -20,20 +28,34 @@ onMounted(() => {
     <Button plain>Plain Button</Button>
     <Button round>Round Button</Button>
     <Button circle>VK</Button>
-    <Button disabled>Disabled Button</Button><br/><br/>
+    <Button disabled>Disabled Button</Button><br /><br />
     <Button type="primary">Primary</Button>
     <Button type="success">Success</Button>
     <Button type="info">Info</Button>
     <Button type="warning">Warning</Button>
-    <Button type="danger">Danger</Button><br/><br/>
+    <Button type="danger">Danger</Button><br /><br />
     <Button type="primary" plain>Primary</Button>
     <Button type="success" plain>Success</Button>
     <Button type="info" plain>Info</Button>
     <Button type="warning" plain>Warning</Button>
-    <Button type="danger" plain>Danger</Button><br/><br/>
+    <Button type="danger" plain>Danger</Button><br /><br />
     <Button size="large">Large</Button>
     <Button size="small">Small</Button>
-
+    <Collapse>
+      <Item name="a">
+        <template #title>
+          <h1>nice title</h1>
+        </template>
+        <h1>headline title</h1>
+        <div>this is content a aaa</div>
+      </Item>
+      <Item name="b" title="nice title b item b">
+        <div>this is bbbbb test</div>
+      </Item>
+      <Item name="c" title="nice cccc" disabled>
+        <div>this is cccc test</div>
+      </Item>
+    </Collapse>
   </main>
 </template>
 
