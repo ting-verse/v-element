@@ -5,11 +5,14 @@ import Collapse from "./components/Collapse/Collapse.vue";
 import Item from "./components/Collapse/CollapseItem.vue";
 import type { ButtonInstance } from "./components/Button/types";
 const buttonRef = ref<ButtonInstance | null>(null);
-const openValue = ref(["a"]);
+const openedValue = ref(["a"]);
 onMounted(() => {
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
   }
+  setTimeout(() => {
+    openedValue.value = ["a", "b"];
+  }, 2000);
 });
 </script>
 
@@ -42,22 +45,20 @@ onMounted(() => {
     <Button type="danger" plain>Danger</Button><br /><br />
     <Button size="large">Large</Button>
     <Button size="small">Small</Button>
-    <Collapse v-model="openValue" accordion>
-      <Item name="a">
-        <template #title>
-          <h1>nice title</h1>
-        </template>
+
+    <Collapse v-model="openedValue">
+      <Item name="a" title="Title A">
         <h1>headline title</h1>
         <div>this is content a aaa</div>
       </Item>
-      <Item name="b" title="nice title b item b">
+      <Item name="b" title="Title B">
         <div>this is bbbbb test</div>
       </Item>
-      <Item name="c" title="nice cccc" disabled>
+      <Item name="c" title="Disabled Title" disabled>
         <div>this is cccc test</div>
       </Item>
     </Collapse>
-    {{ openValue }}
+    {{ openedValue }}
   </main>
 </template>
 

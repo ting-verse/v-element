@@ -7,18 +7,24 @@
   >
     <div
       class="vk-collapse-item__header"
+      :class="{
+        'is-disabled': disabled,
+        'is-active': isActive,
+      }"
       :id="`item-header-${name}`"
       @click="handleItemClick"
     >
       <slot name="title">{{ title }}</slot>
     </div>
-    <div
-      class="vk-collapse-item__content"
-      :id="`item-content-${name}`"
-      v-show="isActive"
-    >
-      <slot />
-    </div>
+    <Transition name="fade">
+      <div
+        class="vk-collapse-item__content"
+        :id="`item-content-${name}`"
+        v-show="isActive"
+      >
+        <slot />
+      </div>
+    </Transition>
   </div>
 </template>
 <script setup lang="ts">
