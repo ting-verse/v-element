@@ -43,6 +43,7 @@
   font-size: var(--vk-collapse-content-font-size);
   color: var(--vk-collapse-content-text-color);
   border-bottom: 1px solid var(--vk-collapse-border-color);
+  padding-bottom: 25px;
 }
 
 .slide-enter-active,
