@@ -69,7 +69,7 @@
   --vk-disabled-text-color: var(--vk-text-color-placeholder);
   --vk-disabled-border-color: var(--vk-border-color-light);
 
-  /* animation */
+  /*animation*/
   --vk-transition-duration: 0.3s;
   --vk-transition-duration-fast: 0.2s;
 }
