@@ -45,8 +45,7 @@
   border-bottom: 1px solid var(--vk-collapse-border-color);
   padding-bottom: 25px;
 }
-
 .slide-enter-active,
 .slide-leave-active {
-  transition: height 0.5s ease-in-out;
+  transition: height 1s ease-in-out;
 }
