@@ -1,12 +1,13 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import Collapse from "./Collapse.vue";
 import CollapseItem from "./CollapseItem.vue";
 describe("Collapse.vue", () => {
   test("basic collapse", async () => {
+    const onChange = vi.fn();
     const wrapper = mount(
       () => (
-        <Collapse modelValue={["a"]}>
+        <Collapse modelValue={["a"]} onChange={onChange}>
           <CollapseItem name="a" title="title a">
             content a
           </CollapseItem>
@@ -49,8 +50,10 @@ describe("Collapse.vue", () => {
     await firstHeader.trigger("click");
     console.log(firstContent.html());
     expect(firstContent.isVisible()).toBeFalsy();
+    expect(onChange).toHaveBeenCalledWith([]);
     await secondHeader.trigger("click");
     expect(secondContent.isVisible()).toBeTruthy();
+    expect(onChange).toHaveBeenLastCalledWith(["b"]);
 
     // disabled
     const disableHeader = headers[2];
