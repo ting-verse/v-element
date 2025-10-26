@@ -5,14 +5,18 @@ import Collapse from "./components/Collapse/Collapse.vue";
 import Item from "./components/Collapse/CollapseItem.vue";
 import Icon from "./components/Icon/Icon.vue";
 import type { ButtonInstance } from "./components/Button/types";
+
 const buttonRef = ref<ButtonInstance | null>(null);
 const openedValue = ref(["a"]);
+const size = ref<any>("3x");
+
 onMounted(() => {
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
   }
   setTimeout(() => {
     openedValue.value = ["a", "b"];
+    size.value = "2xl";
   }, 2000);
 });
 </script>
@@ -27,7 +31,7 @@ onMounted(() => {
       height="125"
     />
   </header>
-  <Icon icon="arrow-up" size="2xl"></Icon>
+  <Icon icon="arrow-up" :size="size" type="danger" color="pink"></Icon>
   <main>
     <Button ref="buttonRef">Test Button</Button>
     <Button plain>Plain Button</Button>

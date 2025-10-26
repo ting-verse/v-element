@@ -44,4 +44,6 @@ export interface IconProps {
   spinPulse?: boolean;
   spinReverse?: boolean;
   widthAuto?: boolean;
+  type?: "primary" | "success" | "warning" | "danger" | "info";
+  color?: string;
 }
