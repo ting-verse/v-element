@@ -8,21 +8,18 @@ import Item from "./components/Collapse/CollapseItem.vue";
 import Icon from "./components/Icon/Icon.vue";
 import type { ButtonInstance } from "./components/Button/types";
 import type { TooltipInstance } from "./components/Tooltip/types";
-
 const buttonRef = ref<ButtonInstance | null>(null);
 const tooltipRef = ref<TooltipInstance | null>(null);
 const openedValue = ref(["a"]);
 const size = ref<any>("3x");
 const trigger = ref<any>("click");
 const options: Partial<Options> = { placement: "right-end", strategy: "fixed" };
-
 const open = () => {
   tooltipRef.value?.show();
 };
 const close = () => {
   tooltipRef.value?.hide();
 };
-
 onMounted(() => {
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
@@ -30,7 +27,8 @@ onMounted(() => {
   setTimeout(() => {
     openedValue.value = ["a", "b"];
     size.value = "2xl";
-  }, 3000);
+    // trigger.value = 'hover'
+  }, 2000);
 });
 </script>
 
@@ -39,9 +37,9 @@ onMounted(() => {
     <Tooltip
       placement="right"
       :trigger="trigger"
-      manual
       ref="tooltipRef"
-      :popper-options="options"
+      :open-delay="1000"
+      :close-delay="1000"
     >
       <img
         alt="Vue logo"
@@ -94,14 +92,17 @@ onMounted(() => {
   </main>
 </template>
 
-<style scoped>
+<style>
 header {
   line-height: 1.5;
 }
 
 .logo {
   display: block;
-  margin: 0 auto 2rem;
+  border: 1px solid green;
+}
+.vk-tooltip__popper {
+  border: 1px solid red;
 }
 
 @media (min-width: 1024px) {
@@ -109,10 +110,6 @@ header {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
   }
 
   header .wrapper {

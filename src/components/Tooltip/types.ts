@@ -8,6 +8,8 @@ export interface TooltipProps {
   manual?: boolean;
   popperOptions?: Partial<Options>;
   transition?: string;
+  openDelay?: number;
+  closeDelay?: number;
 }
 
 // 定义了 Tooltip 组件可以触发的事件类型
