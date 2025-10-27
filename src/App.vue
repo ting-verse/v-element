@@ -2,7 +2,7 @@
 import { ref, onMounted, h } from "vue";
 import type { Options } from "@popperjs/core";
 import Tooltip from "./components/Tooltip/Tooltip.vue";
-import Dropdown from "./components/Dropdown/Dropdown.vue";
+import Dropdown from "./components/Dropdown/Dropdown";
 import type { MenuOption } from "./components/Dropdown/types";
 import Button from "./components/Button/Button.vue";
 import Collapse from "./components/Collapse/Collapse.vue";

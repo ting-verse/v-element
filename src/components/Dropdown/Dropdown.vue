@@ -47,6 +47,11 @@ import type {
 import Tooltip from "../Tooltip/Tooltip.vue";
 import RenderVnode from "../Common/RenderVnode";
 import type { TooltipInstance } from "../Tooltip/types";
+
+defineOptions({
+  name: "VkDropdown",
+});
+
 const props = withDefaults(defineProps<DropdownProps>(), {
   hideAfterClick: true,
 });
