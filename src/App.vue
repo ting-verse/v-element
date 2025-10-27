@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import type { Options } from "@popperjs/core";
 import Tooltip from "./components/Tooltip/Tooltip.vue";
 import Button from "./components/Button/Button.vue";
 import Collapse from "./components/Collapse/Collapse.vue";
@@ -13,6 +14,7 @@ const tooltipRef = ref<TooltipInstance | null>(null);
 const openedValue = ref(["a"]);
 const size = ref<any>("3x");
 const trigger = ref<any>("click");
+const options: Partial<Options> = { placement: "right-end", strategy: "fixed" };
 
 const open = () => {
   tooltipRef.value?.show();
@@ -34,7 +36,13 @@ onMounted(() => {
 
 <template>
   <header>
-    <Tooltip placement="right" :trigger="trigger" manual ref="tooltipRef">
+    <Tooltip
+      placement="right"
+      :trigger="trigger"
+      manual
+      ref="tooltipRef"
+      :popper-options="options"
+    >
       <img
         alt="Vue logo"
         class="logo"
