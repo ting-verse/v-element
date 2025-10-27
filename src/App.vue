@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { createPopper } from "@popperjs/core";
+import type { Instance } from "@popperjs/core";
 import Button from "./components/Button/Button.vue";
 import Collapse from "./components/Collapse/Collapse.vue";
 import Item from "./components/Collapse/CollapseItem.vue";
@@ -9,14 +11,23 @@ import type { ButtonInstance } from "./components/Button/types";
 const buttonRef = ref<ButtonInstance | null>(null);
 const openedValue = ref(["a"]);
 const size = ref<any>("3x");
+const overlayNode = ref<HTMLElement>();
+const triggerNode = ref<HTMLElement>();
+let popperInstance: Instance | null = null;
 
 onMounted(() => {
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
   }
+  if (overlayNode.value && triggerNode.value) {
+    popperInstance = createPopper(triggerNode.value, overlayNode.value, {
+      placement: "right",
+    });
+  }
   setTimeout(() => {
     openedValue.value = ["a", "b"];
     size.value = "2xl";
+    popperInstance?.setOptions({ placement: "bottom" });
   }, 2000);
 });
 </script>
@@ -29,7 +40,9 @@ onMounted(() => {
       src="./assets/logo.svg"
       width="125"
       height="125"
+      ref="triggerNode"
     />
+    <div ref="overlayNode"><h1>Hello Tooltip</h1></div>
   </header>
   <Icon icon="arrow-up" :size="size" type="danger" color="pink"></Icon>
   <main>
