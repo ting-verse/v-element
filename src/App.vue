@@ -6,11 +6,20 @@ import Collapse from "./components/Collapse/Collapse.vue";
 import Item from "./components/Collapse/CollapseItem.vue";
 import Icon from "./components/Icon/Icon.vue";
 import type { ButtonInstance } from "./components/Button/types";
+import type { TooltipInstance } from "./components/Tooltip/types";
 
 const buttonRef = ref<ButtonInstance | null>(null);
+const tooltipRef = ref<TooltipInstance | null>(null);
 const openedValue = ref(["a"]);
 const size = ref<any>("3x");
 const trigger = ref<any>("click");
+
+const open = () => {
+  tooltipRef.value?.show();
+};
+const close = () => {
+  tooltipRef.value?.hide();
+};
 
 onMounted(() => {
   if (buttonRef.value) {
@@ -25,7 +34,7 @@ onMounted(() => {
 
 <template>
   <header>
-    <Tooltip placement="right" :trigger="trigger">
+    <Tooltip placement="right" :trigger="trigger" manual ref="tooltipRef">
       <img
         alt="Vue logo"
         class="logo"
@@ -41,8 +50,8 @@ onMounted(() => {
 
   <Icon icon="arrow-up" :size="size" type="danger" color="#0e7a0d" />
   <main>
-    <Button ref="buttonRef">Test Button</Button>
-    <Button plain>Plain Button</Button>
+    <Button ref="buttonRef" @click="open">Test Button</Button>
+    <Button plain @click="close">Plain Button</Button>
     <Button round>Round Button</Button>
     <Button circle>VK</Button>
     <Button disabled>Disabled Button</Button><br /><br />

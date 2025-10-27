@@ -5,9 +5,15 @@ export interface TooltipProps {
   content?: string;
   trigger?: "hover" | "click";
   placement?: Placement;
+  manual?: boolean;
 }
 
 // 定义了 Tooltip 组件可以触发的事件类型
 export interface TooltipEmits {
   (e: "visible-change", value: boolean): void;
+}
+
+export interface TooltipInstance {
+  show: () => void;
+  hide: () => void;
 }
