@@ -38,8 +38,7 @@ onMounted(() => {
       placement="right"
       :trigger="trigger"
       ref="tooltipRef"
-      :open-delay="1000"
-      :close-delay="1000"
+      content="hello tooltip"
     >
       <img
         alt="Vue logo"
@@ -48,9 +47,6 @@ onMounted(() => {
         width="125"
         height="125"
       />
-      <template #content>
-        <h1>Hello tooltip</h1>
-      </template>
     </Tooltip>
   </header>
 

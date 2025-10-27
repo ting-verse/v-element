@@ -8,6 +8,7 @@
         <slot name="content">
           {{ content }}
         </slot>
+        <div id="arrow" data-popper-arrow></div>
       </div>
     </Transition>
   </div>
@@ -19,7 +20,6 @@ import type { Instance } from "@popperjs/core";
 import { debounce } from "lodash-es";
 import type { TooltipProps, TooltipEmits, TooltipInstance } from "./types";
 import useClickOutside from "../../hooks/useClickOutside";
-
 const props = withDefaults(defineProps<TooltipProps>(), {
   placement: "bottom",
   trigger: "hover",
@@ -35,23 +35,35 @@ const popperContainerNode = ref<HTMLElement>();
 let popperInstance: null | Instance = null;
 let events: Record<string, any> = reactive({});
 let outerEvents: Record<string, any> = reactive({});
-
+let openTimes = 0;
+let closeTimes = 0;
 const popperOptions = computed(() => {
   return {
     placement: props.placement,
+    modifiers: [
+      {
+        name: "offset",
+        options: {
+          offset: [0, 9],
+        },
+      },
+    ],
     ...props.popperOptions,
   };
 });
 
 const open = () => {
+  openTimes++;
+  console.log("open times", openTimes);
   isOpen.value = true;
   emits("visible-change", true);
 };
 const close = () => {
+  closeTimes++;
+  console.log("close times", closeTimes);
   isOpen.value = false;
   emits("visible-change", false);
 };
-
 const openDebounce = debounce(open, props.openDelay);
 const closeDebounce = debounce(close, props.closeDelay);
 
@@ -71,13 +83,11 @@ const togglePopper = () => {
     openFinal();
   }
 };
-
 useClickOutside(popperContainerNode, () => {
   if (props.trigger === "click" && isOpen.value && !props.manual) {
     closeFinal();
   }
 });
-
 const attachEvents = () => {
   if (props.trigger === "hover") {
     events["mouseenter"] = openFinal;
@@ -86,11 +96,9 @@ const attachEvents = () => {
     events["click"] = togglePopper;
   }
 };
-
 if (!props.manual) {
   attachEvents();
 }
-
 watch(
   () => props.manual,
   (isManual) => {
@@ -134,7 +142,6 @@ watch(
 onUnmounted(() => {
   popperInstance?.destroy();
 });
-
 defineExpose<TooltipInstance>({
   show: openFinal,
   hide: closeFinal,
