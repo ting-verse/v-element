@@ -1,8 +1,9 @@
-import { computed, defineComponent, Fragment } from "vue";
+import { computed, defineComponent, Fragment, ref } from "vue";
 import type { PropType } from "vue";
 import type { Placement, Options } from "@popperjs/core";
 import type { MenuOption } from "./types";
 import Tooltip from "../Tooltip/Tooltip.vue";
+import type { TooltipInstance } from "../Tooltip/types";
 export default defineComponent({
   name: "VkDropdown",
   props: {
@@ -33,12 +34,29 @@ export default defineComponent({
       type: Array as PropType<MenuOption[]>,
       required: true,
     },
-    closeAfterClick: {
+    hideAfterClick: {
       type: Boolean,
       default: true,
     },
+    manual: {
+      type: Boolean,
+    },
   },
-  setup(props, { slots }) {
+  emits: ["visible-change", "select"],
+  setup(props, { slots, emit, expose }) {
+    const tooltipRef = ref<TooltipInstance | null>(null);
+    const itemClick = (e: MenuOption) => {
+      if (e.disabled) {
+        return;
+      }
+      emit("select", e);
+      if (props.hideAfterClick) {
+        tooltipRef.value?.hide();
+      }
+    };
+    const visibleChange = (e: boolean) => {
+      emit("visible-change", e);
+    };
     const options = computed(() => {
       return props.menuOptions.map((item) => {
         return (
@@ -48,12 +66,24 @@ export default defineComponent({
             ) : (
               ""
             )}
-            <li class="vk-dropdown__item" id={`dropdown-item-${item.key}`}>
+            <li
+              class={{
+                "vk-dropdown__item": true,
+                "is-disabled": item.disabled,
+                "is-divided": item.divided,
+              }}
+              id={`dropdown-item-${item.key}`}
+              onClick={() => itemClick(item)}
+            >
               {item.label}
             </li>
           </Fragment>
         );
       });
+    });
+    expose({
+      show: () => tooltipRef.value?.show(),
+      hide: () => tooltipRef.value?.hide(),
     });
     return () => (
       <div class="vk-dropdown">
@@ -63,6 +93,9 @@ export default defineComponent({
           popperOptions={props.popperOptions}
           openDelay={props.openDelay}
           closeDelay={props.closeDelay}
+          manual={props.manual}
+          ref={tooltipRef}
+          onVisible-change={visibleChange}
         >
           {{
             default: () => slots.default && slots.default(),

@@ -2,7 +2,7 @@
 import { ref, onMounted, h } from "vue";
 import type { Options } from "@popperjs/core";
 import Tooltip from "./components/Tooltip/Tooltip.vue";
-import Dropdown from "./components/Dropdown/Dropdown";
+import Dropdown from "./components/Dropdown/Dropdown.vue";
 import type { MenuOption } from "./components/Dropdown/types";
 import Button from "./components/Button/Button.vue";
 import Collapse from "./components/Collapse/Collapse.vue";
@@ -27,6 +27,9 @@ const open = () => {
 const close = () => {
   tooltipRef.value?.hide();
 };
+const inlineConsole = (...args: any) => {
+  console.log(...args);
+};
 onMounted(() => {
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
@@ -41,7 +44,15 @@ onMounted(() => {
 
 <template>
   <header>
-    <Dropdown placement="bottom" :trigger="trigger" :menu-options="options">
+    <Dropdown
+      placement="bottom"
+      :trigger="trigger"
+      :menu-options="options"
+      @visible-change="(e) => inlineConsole('visible change', e)"
+      @select="(e) => inlineConsole('select', e)"
+      manual
+      ref="tooltipRef"
+    >
       <img
         alt="Vue logo"
         class="logo"

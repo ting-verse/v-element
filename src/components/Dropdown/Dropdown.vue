@@ -6,6 +6,7 @@
       :popper-options="popperOptions"
       :open-delay="openDelay"
       :close-delay="closeDelay"
+      :manual="manual"
       @visible-change="visibleChange"
       ref="tooltipRef"
     >
@@ -27,7 +28,7 @@
               }"
               :id="`dropdown-item-${item.key}`"
             >
-              <RenderVnode :vNode="item.label"></RenderVnode>
+              <RenderVnode :vNode="item.label" />
             </li>
           </template>
         </ul>
@@ -37,7 +38,6 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import type { Ref } from "vue";
 import type {
   DropdownProps,
   DropdownInstance,
@@ -47,16 +47,14 @@ import type {
 import Tooltip from "../Tooltip/Tooltip.vue";
 import RenderVnode from "../Common/RenderVnode";
 import type { TooltipInstance } from "../Tooltip/types";
-
 defineOptions({
   name: "VkDropdown",
 });
-
 const props = withDefaults(defineProps<DropdownProps>(), {
   hideAfterClick: true,
 });
 const emits = defineEmits<DropdownEmits>();
-const tooltipRef = ref() as Ref<TooltipInstance>;
+const tooltipRef = ref<TooltipInstance | null>(null);
 const visibleChange = (e: boolean) => {
   emits("visible-change", e);
 };
@@ -66,11 +64,11 @@ const itemClick = (e: MenuOption) => {
   }
   emits("select", e);
   if (props.hideAfterClick) {
-    tooltipRef.value.hide();
+    tooltipRef.value?.hide();
   }
 };
 defineExpose<DropdownInstance>({
-  show: tooltipRef.value?.show,
-  hide: tooltipRef.value?.hide,
+  show: () => tooltipRef.value?.show(),
+  hide: () => tooltipRef.value?.hide(),
 });
 </script>
