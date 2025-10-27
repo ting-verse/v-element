@@ -19,7 +19,6 @@ onMounted(() => {
   setTimeout(() => {
     openedValue.value = ["a", "b"];
     size.value = "2xl";
-    trigger.value = "hover";
   }, 3000);
 });
 </script>
