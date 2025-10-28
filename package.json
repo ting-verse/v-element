@@ -28,6 +28,8 @@
     "@types/node": "^18.11.12",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
+    "@vitepress-demo-preview/component": "^2.3.0",
+    "@vitepress-demo-preview/plugin": "^1.1.9",
     "@vue-macros/volar": "^0.8.1",
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vue/test-utils": "^2.4.6",

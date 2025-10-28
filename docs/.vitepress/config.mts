@@ -1,7 +1,11 @@
 import { defineConfig } from "vitepress";
+import { fileURLToPath, URL } from "node:url";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import VueMacros from "unplugin-vue-macros";
-
+import {
+  containerPreview,
+  componentPreview,
+} from "@vitepress-demo-preview/plugin";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "My Awesome Project",
@@ -16,6 +20,17 @@ export default defineConfig({
         },
       }),
     ],
+    resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("../../src", import.meta.url)),
+      },
+    },
+  },
+  markdown: {
+    config(md) {
+      md.use(containerPreview);
+      md.use(componentPreview);
+    },
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
@@ -31,7 +46,7 @@ export default defineConfig({
         items: [
           { text: "Markdown Examples", link: "/markdown-examples" },
           { text: "Runtime API Examples", link: "/api-examples" },
-          { text: "Test", link: "/api-examples" },
+          { text: "Test here", link: "/api-examples" },
         ],
       },
       {
