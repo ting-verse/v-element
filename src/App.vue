@@ -31,6 +31,7 @@ const inlineConsole = (...args: any) => {
 };
 onMounted(() => {
   createMessage({ message: "hello world", duration: 0 });
+  createMessage({ message: "hello world again" });
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
   }
