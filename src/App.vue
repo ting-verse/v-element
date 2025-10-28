@@ -30,7 +30,7 @@ const inlineConsole = (...args: any) => {
   console.log(...args);
 };
 onMounted(() => {
-  createMessage({ message: "hello world", duration: 0 });
+  const instance = createMessage({ message: "hello world", duration: 0 });
   createMessage({ message: "hello world again", duration: 0 });
   createMessage({ message: "hello world three", duration: 0 });
   if (buttonRef.value) {
@@ -39,6 +39,7 @@ onMounted(() => {
   setTimeout(() => {
     openedValue.value = ["a", "b"];
     size.value = "2xl";
+    instance.destory();
     // trigger.value = 'hover'
   }, 2000);
 });
