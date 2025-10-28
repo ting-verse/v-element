@@ -8,6 +8,7 @@ import Button from "./components/Button/Button.vue";
 import Collapse from "./components/Collapse/Collapse.vue";
 import Item from "./components/Collapse/CollapseItem.vue";
 import Icon from "./components/Icon/Icon.vue";
+import Message from "./components/Message/Message.vue";
 import type { ButtonInstance } from "./components/Button/types";
 import type { TooltipInstance } from "./components/Tooltip/types";
 const buttonRef = ref<ButtonInstance | null>(null);
@@ -43,6 +44,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <Message message="hello message" :duration="0" show-close></Message>
   <header>
     <Dropdown
       placement="bottom"
