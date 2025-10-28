@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, h } from "vue";
-import type { Options } from "@popperjs/core";
-import Tooltip from "./components/Tooltip/Tooltip.vue";
 import Dropdown from "./components/Dropdown/Dropdown.vue";
 import type { MenuOption } from "./components/Dropdown/types";
 import Button from "./components/Button/Button.vue";
 import Collapse from "./components/Collapse/Collapse.vue";
 import Item from "./components/Collapse/CollapseItem.vue";
 import Icon from "./components/Icon/Icon.vue";
-import Message from "./components/Message/Message.vue";
+import { createMessage } from "./components/Message/method";
 import type { ButtonInstance } from "./components/Button/types";
 import type { TooltipInstance } from "./components/Tooltip/types";
 const buttonRef = ref<ButtonInstance | null>(null);
@@ -32,6 +30,7 @@ const inlineConsole = (...args: any) => {
   console.log(...args);
 };
 onMounted(() => {
+  createMessage({ message: "hello world", duration: 0 });
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
   }
@@ -44,7 +43,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <Message message="hello message" :duration="0" show-close></Message>
   <header>
     <Dropdown
       placement="bottom"
