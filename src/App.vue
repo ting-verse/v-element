@@ -21,6 +21,7 @@ const options: MenuOption[] = [
   { key: 4, label: "item4" },
 ];
 const open = () => {
+  createMessage({ message: "hello world", duration: 0, showClose: true });
   tooltipRef.value?.show();
 };
 const close = () => {
@@ -30,9 +31,19 @@ const inlineConsole = (...args: any) => {
   console.log(...args);
 };
 onMounted(() => {
-  const instance = createMessage({ message: "hello world" });
-  createMessage({ message: "hello world again", duration: 0 });
-  createMessage({ message: "hello world three", duration: 0 });
+  createMessage({ message: "hello world", duration: 0, showClose: true });
+  createMessage({
+    message: "hello world again",
+    duration: 0,
+    type: "success",
+    showClose: true,
+  });
+  createMessage({
+    message: "hello world three",
+    duration: 0,
+    type: "danger",
+    showClose: true,
+  });
   if (buttonRef.value) {
     console.log("buttonRef", buttonRef.value.ref);
   }
