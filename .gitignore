@@ -26,3 +26,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# VitePress 构建产物和缓存（新增这两行）
+docs/.vitepress/dist
+docs/.vitepress/cache
