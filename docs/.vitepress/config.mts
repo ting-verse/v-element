@@ -21,6 +21,10 @@ export default defineConfig({
           { text: "Test", link: "/api-examples" },
         ],
       },
+      {
+        text: "Basic",
+        items: [{ text: "Button", link: "/components/button" }],
+      },
     ],
 
     socialLinks: [
