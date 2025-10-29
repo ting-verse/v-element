@@ -25,7 +25,9 @@
         </span>
         <input
           class="vk-input__inner"
-          :type="type"
+          :type="
+            showPassword ? (passwordVisible ? 'text' : 'password') : 'type'
+          "
           :disabled="disabled"
           v-model="innerValue"
           @input="handleInput"
@@ -33,13 +35,28 @@
           @blur="handleBlur"
         />
         <!-- suffix slot  -->
-        <span v-if="$slots.suffix || showClear" class="vk-input__suffix">
+        <span
+          v-if="$slots.suffix || showClear || showPasswordArea"
+          class="vk-input__suffix"
+        >
           <slot name="suffix"></slot>
           <Icon
             icon="circle-xmark"
             v-if="showClear"
             class="vk-input__clear"
             @click="clear"
+          ></Icon>
+          <Icon
+            icon="eye"
+            v-if="showPasswordArea && passwordVisible"
+            class="vk-input__password"
+            @click="togglePasswordVisible"
+          ></Icon>
+          <Icon
+            icon="eye-slash"
+            v-if="showPasswordArea && !passwordVisible"
+            class="vk-input__password"
+            @click="togglePasswordVisible"
           ></Icon>
         </span>
       </div>
@@ -78,11 +95,18 @@ const emits = defineEmits<InputEmits>();
 
 const innerValue = ref(props.modelValue);
 const isFocus = ref(false);
+const passwordVisible = ref(false);
 
 const showClear = computed(
   () =>
     props.clearable && !props.disabled && !!innerValue.value && isFocus.value
 );
+const showPasswordArea = computed(
+  () => props.showPassword && !props.disabled && !!innerValue.value
+);
+const togglePasswordVisible = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
 
 const handleInput = () => {
   emits("update:modelValue", innerValue.value);

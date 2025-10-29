@@ -80,4 +80,29 @@ describe("Input", () => {
     await wrapper.get(".vk-input__clear").trigger("click");
     expect(input.element.value).toBe("");
   });
+  it.only("支持切换密码显示", async () => {
+    const wrapper = mount(Input, {
+      props: {
+        modelValue: "",
+        showPassword: true,
+        type: "text",
+      },
+      global: {
+        stubs: ["Icon"],
+      },
+    });
+    // 不出现对应的 Icon 区域, 因为当前值为空
+    expect(wrapper.find(".vk-input__password").exists()).toBeFalsy();
+    const input = wrapper.get("input");
+    expect(input.element.type).toBe("password");
+    //  出现 Icon 区域，并且 Icon 为特点的图标
+    await input.setValue("123");
+    const eyeIcon = wrapper.find(".vk-input__password");
+    expect(eyeIcon.exists()).toBeTruthy();
+    expect(eyeIcon.attributes("icon")).toBe("eye-slash");
+    // 点击值变会切换input 类型，并且图标的 Icon 会切换
+    await eyeIcon.trigger("click");
+    expect(input.element.type).toBe("text");
+    expect(wrapper.find(".vk-input__password").attributes("icon")).toBe("eye");
+  });
 });
