@@ -16,53 +16,52 @@
     <template v-if="type !== 'textarea'">
       <!-- prepend slot -->
       <div v-if="$slots.prepend" class="vk-input__prepend">
-        <slot name="prepend"></slot>
+        <slot name="prepend" />
       </div>
       <div class="vk-input__wrapper">
         <!-- prefix slot -->
         <span v-if="$slots.prefix" class="vk-input__prefix">
-          <slot name="prefix"></slot>
+          <slot name="prefix" />
         </span>
         <input
           class="vk-input__inner"
-          :type="
-            showPassword ? (passwordVisible ? 'text' : 'password') : 'type'
-          "
+          :type="showPassword ? (passwordVisible ? 'text' : 'password') : type"
           :disabled="disabled"
           v-model="innerValue"
           @input="handleInput"
+          @change="handleChange"
           @focus="handleFocus"
           @blur="handleBlur"
         />
-        <!-- suffix slot  -->
+        <!-- suffix slot -->
         <span
           v-if="$slots.suffix || showClear || showPasswordArea"
           class="vk-input__suffix"
         >
-          <slot name="suffix"></slot>
+          <slot name="suffix" />
           <Icon
             icon="circle-xmark"
             v-if="showClear"
             class="vk-input__clear"
             @click="clear"
-          ></Icon>
+          />
           <Icon
             icon="eye"
             v-if="showPasswordArea && passwordVisible"
             class="vk-input__password"
             @click="togglePasswordVisible"
-          ></Icon>
+          />
           <Icon
             icon="eye-slash"
             v-if="showPasswordArea && !passwordVisible"
             class="vk-input__password"
             @click="togglePasswordVisible"
-          ></Icon>
+          />
         </span>
       </div>
       <!-- append slot -->
-      <div v-if="$slots.append" class="vk-input-append">
-        <slot name="append"></slot>
+      <div v-if="$slots.append" class="vk-input__append">
+        <slot name="append" />
       </div>
     </template>
     <!-- textarea -->
@@ -72,13 +71,13 @@
         :disabled="disabled"
         v-model="innerValue"
         @input="handleInput"
+        @change="handleChange"
         @focus="handleFocus"
         @blur="handleBlur"
-      ></textarea>
+      />
     </template>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import type { InputProps, InputEmits } from "./types";
@@ -87,12 +86,8 @@ import Icon from "../Icon/Icon.vue";
 defineOptions({
   name: "VkInput",
 });
-
-const props = withDefaults(defineProps<InputProps>(), {
-  type: "text",
-});
+const props = withDefaults(defineProps<InputProps>(), { type: "text" });
 const emits = defineEmits<InputEmits>();
-
 const innerValue = ref(props.modelValue);
 const isFocus = ref(false);
 const passwordVisible = ref(false);
@@ -107,21 +102,28 @@ const showPasswordArea = computed(
 const togglePasswordVisible = () => {
   passwordVisible.value = !passwordVisible.value;
 };
-
 const handleInput = () => {
   emits("update:modelValue", innerValue.value);
+  emits("input", innerValue.value);
 };
-const handleFocus = () => {
+const handleChange = () => {
+  emits("change", innerValue.value);
+};
+const handleFocus = (event: FocusEvent) => {
   isFocus.value = true;
+  emits("focus", event);
 };
-const handleBlur = () => {
+const handleBlur = (event: FocusEvent) => {
   isFocus.value = false;
+  emits("blur", event);
 };
 const clear = () => {
   innerValue.value = "";
   emits("update:modelValue", "");
+  emits("clear");
+  emits("input", "");
+  emits("change", "");
 };
-
 watch(
   () => props.modelValue,
   (newValue) => {
