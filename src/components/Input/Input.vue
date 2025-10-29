@@ -9,6 +9,7 @@
       'is-append': $slots.append,
       'is-prefix': $slots.prefix,
       'is-suffix': $slots.suffix,
+      'is-focus': isFocus,
     }"
   >
     <!-- input -->
@@ -28,10 +29,18 @@
           :disabled="disabled"
           v-model="innerValue"
           @input="handleInput"
+          @focus="handleFocus"
+          @blur="handleBlur"
         />
         <!-- suffix slot  -->
-        <span v-if="$slots.suffix" class="vk-input__suffix">
+        <span v-if="$slots.suffix || showClear" class="vk-input__suffix">
           <slot name="suffix"></slot>
+          <Icon
+            icon="circle-xmark"
+            v-if="showClear"
+            class="vk-input__clear"
+            @click="clear"
+          ></Icon>
         </span>
       </div>
       <!-- append slot -->
@@ -46,14 +55,17 @@
         :disabled="disabled"
         v-model="innerValue"
         @input="handleInput"
+        @focus="handleFocus"
+        @blur="handleBlur"
       ></textarea>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import type { InputProps, InputEmits } from "./types";
+import Icon from "../Icon/Icon.vue";
 
 defineOptions({
   name: "VkInput",
@@ -65,9 +77,25 @@ const props = withDefaults(defineProps<InputProps>(), {
 const emits = defineEmits<InputEmits>();
 
 const innerValue = ref(props.modelValue);
+const isFocus = ref(false);
+
+const showClear = computed(
+  () =>
+    props.clearable && !props.disabled && !!innerValue.value && isFocus.value
+);
 
 const handleInput = () => {
   emits("update:modelValue", innerValue.value);
+};
+const handleFocus = () => {
+  isFocus.value = true;
+};
+const handleBlur = () => {
+  isFocus.value = false;
+};
+const clear = () => {
+  innerValue.value = "";
+  emits("update:modelValue", "");
 };
 
 watch(
