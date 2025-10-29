@@ -22,7 +22,13 @@
         <span v-if="$slots.prefix" class="vk-input__prefix">
           <slot name="prefix"></slot>
         </span>
-        <input class="vk-input__inner" :type="type" :disabled="disabled" />
+        <input
+          class="vk-input__inner"
+          :type="type"
+          :disabled="disabled"
+          v-model="innerValue"
+          @input="handleInput"
+        />
         <!-- suffix slot  -->
         <span v-if="$slots.suffix" class="vk-input__suffix">
           <slot name="suffix"></slot>
@@ -35,18 +41,39 @@
     </template>
     <!-- textarea -->
     <template v-else>
-      <textarea class="vk-textarea__wrapper" :disabled="disabled"></textarea>
+      <textarea
+        class="vk-textarea__wrapper"
+        :disabled="disabled"
+        v-model="innerValue"
+        @input="handleInput"
+      ></textarea>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { InputProps } from "./types";
+import { ref, watch } from "vue";
+import type { InputProps, InputEmits } from "./types";
 
 defineOptions({
   name: "VkInput",
 });
-withDefaults(defineProps<InputProps>(), {
+
+const props = withDefaults(defineProps<InputProps>(), {
   type: "text",
 });
+const emits = defineEmits<InputEmits>();
+
+const innerValue = ref(props.modelValue);
+
+const handleInput = () => {
+  emits("update:modelValue", innerValue.value);
+};
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    innerValue.value = newValue;
+  }
+);
 </script>

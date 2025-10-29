@@ -11,6 +11,7 @@ describe("Input", () => {
       props: {
         size: "small",
         type: "text",
+        modelValue: "",
       },
       slots: {
         prepend: "prepend",
@@ -34,8 +35,28 @@ describe("Input", () => {
     const wrapper2 = mount(Input, {
       props: {
         type: "textarea",
+        modelValue: "",
       },
     });
     expect(wrapper2.find("textarea").exists()).toBeTruthy();
+  });
+  it("支持 v-model", async () => {
+    const wrapper = mount(Input, {
+      props: {
+        modelValue: "test",
+        "onUpdate:modelValue": (e: any) => wrapper.setProps({ modelValue: e }),
+        type: "text",
+      },
+    });
+    // 初始值
+    const input = wrapper.get("input");
+    expect(input.element.value).toBe("test");
+    // 更新值
+    await input.setValue("update");
+    expect(wrapper.props("modelValue")).toBe("update");
+    expect(input.element.value).toBe("update");
+    // v-model 的异步更新
+    await wrapper.setProps({ modelValue: "prop update" });
+    expect(input.element.value).toBe("prop update");
   });
 });
