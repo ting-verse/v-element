@@ -26,7 +26,14 @@
         <input
           class="vk-input__inner"
           :type="showPassword ? (passwordVisible ? 'text' : 'password') : type"
+          ref="inputRef"
+          v-bind="attrs"
           :disabled="disabled"
+          :readonly="readonly"
+          :autocomplete="autocomplete"
+          :placeholder="placeholder"
+          :autofocus="autofocus"
+          :form="form"
           v-model="innerValue"
           @input="handleInput"
           @change="handleChange"
@@ -68,7 +75,14 @@
     <template v-else>
       <textarea
         class="vk-textarea__wrapper"
+        v-bind="attrs"
+        ref="inputRef"
         :disabled="disabled"
+        :readonly="readonly"
+        :autocomplete="autocomplete"
+        :placeholder="placeholder"
+        :autofocus="autofocus"
+        :form="form"
         v-model="innerValue"
         @input="handleInput"
         @change="handleChange"
@@ -79,18 +93,25 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, useAttrs } from "vue";
+import type { Ref } from "vue";
 import type { InputProps, InputEmits } from "./types";
 import Icon from "../Icon/Icon.vue";
 
 defineOptions({
   name: "VkInput",
+  inheritAttrs: false,
 });
-const props = withDefaults(defineProps<InputProps>(), { type: "text" });
+const props = withDefaults(defineProps<InputProps>(), {
+  type: "text",
+  autocomplete: "off",
+});
 const emits = defineEmits<InputEmits>();
+const attrs = useAttrs();
 const innerValue = ref(props.modelValue);
 const isFocus = ref(false);
 const passwordVisible = ref(false);
+const inputRef = ref() as Ref<HTMLInputElement>;
 
 const showClear = computed(
   () =>
@@ -130,4 +151,7 @@ watch(
     innerValue.value = newValue;
   }
 );
+defineExpose({
+  ref: inputRef,
+});
 </script>
