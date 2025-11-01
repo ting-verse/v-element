@@ -18,7 +18,8 @@
         :disabled="disabled"
         :placeholder="placeholder"
         ref="inputRef"
-        readonly
+        :readonly="!filterable"
+        @input="onFilter"
       >
         <template #suffix>
           <Icon
@@ -38,7 +39,7 @@
       </Input>
       <template #content>
         <ul class="vk-select__menu">
-          <template v-for="(item, index) in options" :key="index">
+          <template v-for="(item, index) in filteredOptions" :key="index">
             <li
               class="vk-select__menu-item"
               :class="{
@@ -59,7 +60,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, watch } from "vue";
 import type { Ref } from "vue";
 import type {
   SelectProps,
@@ -73,6 +74,7 @@ import Input from "../Input/Input.vue";
 import Icon from "../Icon/Icon.vue";
 import RenderVnode from "../Common/RenderVnode";
 import type { InputInstance } from "../Input/types";
+import { isFunction } from "lodash-es";
 
 const findOption = (value: string) => {
   const option = props.options.find((option) => option.value === value);
@@ -110,6 +112,26 @@ const popperOptions: any = {
       requires: ["computeStyles"],
     },
   ],
+};
+const filteredOptions = ref(props.options);
+watch(
+  () => props.options,
+  (newOptions) => {
+    filteredOptions.value = newOptions;
+  }
+);
+const generateFilterOptions = (searchValue: string) => {
+  if (!props.filterable) return;
+  if (props.filterMethod && isFunction(props.filterMethod)) {
+    filteredOptions.value = props.filterMethod(searchValue);
+  } else {
+    filteredOptions.value = props.options.filter((option) =>
+      option.label.includes(searchValue)
+    );
+  }
+};
+const onFilter = () => {
+  generateFilterOptions(states.inputValue);
 };
 const controlDropdown = (show: boolean) => {
   if (show) {
