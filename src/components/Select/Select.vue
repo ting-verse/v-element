@@ -19,7 +19,7 @@
         :placeholder="filteredPlaceholder"
         ref="inputRef"
         :readonly="!filterable || !isDropdownShow"
-        @input="onFilter"
+        @input="debounceOnFilter"
       >
         <template #suffix>
           <Icon
@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from "vue";
 import type { Ref } from "vue";
-import { isFunction } from "lodash-es";
+import { isFunction, debounce } from "lodash-es";
 import type {
   SelectProps,
   SelectEmits,
@@ -96,6 +96,7 @@ defineOptions({
 const props = withDefaults(defineProps<SelectProps>(), {
   options: () => [],
 });
+const timeout = computed(() => (props.remote ? 300 : 0));
 const emits = defineEmits<SelectEmits>();
 const initialOption = findOption(props.modelValue);
 const tooltipRef = ref() as Ref<TooltipInstance>;
@@ -160,6 +161,9 @@ const generateFilterOptions = async (searchValue: string) => {
 const onFilter = () => {
   generateFilterOptions(states.inputValue);
 };
+const debounceOnFilter = debounce(() => {
+  onFilter();
+}, timeout.value);
 const filteredPlaceholder = computed(() => {
   return props.filterable && states.selectedOption && isDropdownShow.value
     ? states.selectedOption.label
