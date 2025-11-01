@@ -56,6 +56,7 @@
               :class="{
                 'is-disabled': item.disabled,
                 'is-selected': states.selectedOption?.value === item.value,
+                'is-highlighted': states.highlightIndex === index,
               }"
               :id="`select-item-${item.value}`"
               @click.stop="itemSelect(item)"
@@ -73,7 +74,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from "vue";
 import type { Ref } from "vue";
-import { isFunction, debounce } from "lodash-es";
+import { isFunction, debounce, filter } from "lodash-es";
 import type {
   SelectProps,
   SelectEmits,
@@ -107,6 +108,7 @@ const states = reactive<SelectStates>({
   selectedOption: initialOption,
   mouseHover: false,
   loading: false,
+  highlightIndex: -1,
 });
 const isDropdownShow = ref(false);
 const popperOptions: any = {
@@ -158,6 +160,7 @@ const generateFilterOptions = async (searchValue: string) => {
       option.label.includes(searchValue)
     );
   }
+  states.highlightIndex = -1;
 };
 const onFilter = () => {
   generateFilterOptions(states.inputValue);
@@ -190,6 +193,7 @@ const controlDropdown = (show: boolean) => {
         ? states.selectedOption.label
         : "";
     }
+    states.highlightIndex = -1;
   }
   isDropdownShow.value = show;
   emits("visible-change", show);
@@ -197,11 +201,45 @@ const controlDropdown = (show: boolean) => {
 const handleKeydown = (e: KeyboardEvent) => {
   switch (e.key) {
     case "Enter":
-      toggleDropdown();
+      if (!isDropdownShow.value) {
+        controlDropdown(true);
+      } else {
+        if (
+          states.highlightIndex > -1 &&
+          filteredOptions.value[states.highlightIndex]
+        ) {
+          itemSelect(filteredOptions.value[states.highlightIndex]);
+        } else {
+          controlDropdown(false);
+        }
+      }
       break;
     case "Escape":
       if (isDropdownShow.value) {
         controlDropdown(false);
+      }
+      break;
+    case "ArrowUp":
+      e.preventDefault();
+      if (filteredOptions.value.length > 0) {
+        if (states.highlightIndex === -1 || states.highlightIndex === 0) {
+          states.highlightIndex = filteredOptions.value.length - 1;
+        } else {
+          states.highlightIndex--;
+        }
+      }
+      break;
+    case "ArrowDown":
+      e.preventDefault();
+      if (filteredOptions.value.length > 0) {
+        if (
+          states.highlightIndex === -1 ||
+          states.highlightIndex === filteredOptions.value.length - 1
+        ) {
+          states.highlightIndex = 0;
+        } else {
+          states.highlightIndex++;
+        }
       }
       break;
     default:
