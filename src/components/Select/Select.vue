@@ -39,7 +39,16 @@
         </template>
       </Input>
       <template #content>
-        <ul class="vk-select__menu">
+        <div class="vk-select__loading" v-if="states.loading">
+          <Icon icon="spinner" spin />
+        </div>
+        <div
+          class="vk-select__nodata"
+          v-else-if="filterable && filteredOptions.length === 0"
+        >
+          no matching data
+        </div>
+        <ul class="vk-select__menu" v-else>
           <template v-for="(item, index) in filteredOptions" :key="index">
             <li
               class="vk-select__menu-item"
@@ -84,7 +93,9 @@ const findOption = (value: string) => {
 defineOptions({
   name: "VkSelect",
 });
-const props = defineProps<SelectProps>();
+const props = withDefaults(defineProps<SelectProps>(), {
+  options: () => [],
+});
 const emits = defineEmits<SelectEmits>();
 const initialOption = findOption(props.modelValue);
 const tooltipRef = ref() as Ref<TooltipInstance>;
@@ -93,6 +104,7 @@ const states = reactive<SelectStates>({
   inputValue: initialOption ? initialOption.label : "",
   selectedOption: initialOption,
   mouseHover: false,
+  loading: false,
 });
 const isDropdownShow = ref(false);
 const popperOptions: any = {
@@ -121,10 +133,24 @@ watch(
     filteredOptions.value = newOptions;
   }
 );
-const generateFilterOptions = (searchValue: string) => {
+const generateFilterOptions = async (searchValue: string) => {
   if (!props.filterable) return;
   if (props.filterMethod && isFunction(props.filterMethod)) {
     filteredOptions.value = props.filterMethod(searchValue);
+  } else if (
+    props.remote &&
+    props.remoteMethod &&
+    isFunction(props.remoteMethod)
+  ) {
+    states.loading = true;
+    try {
+      filteredOptions.value = await props.remoteMethod(searchValue);
+    } catch (e) {
+      console.error(e);
+      filteredOptions.value = [];
+    } finally {
+      states.loading = false;
+    }
   } else {
     filteredOptions.value = props.options.filter((option) =>
       option.label.includes(searchValue)
