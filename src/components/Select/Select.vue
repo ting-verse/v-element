@@ -16,9 +16,9 @@
       <Input
         v-model="states.inputValue"
         :disabled="disabled"
-        :placeholder="placeholder"
+        :placeholder="filteredPlaceholder"
         ref="inputRef"
-        :readonly="!filterable"
+        :readonly="!filterable || !isDropdownShow"
         @input="onFilter"
       >
         <template #suffix>
@@ -28,7 +28,8 @@
             class="vk-input__clear"
             @mousedown.prevent="NOOP"
             @click.stop="onClear"
-          ></Icon>
+          />
+
           <Icon
             v-else
             icon="angle-down"
@@ -62,6 +63,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from "vue";
 import type { Ref } from "vue";
+import { isFunction } from "lodash-es";
 import type {
   SelectProps,
   SelectEmits,
@@ -74,7 +76,6 @@ import Input from "../Input/Input.vue";
 import Icon from "../Icon/Icon.vue";
 import RenderVnode from "../Common/RenderVnode";
 import type { InputInstance } from "../Input/types";
-import { isFunction } from "lodash-es";
 
 const findOption = (value: string) => {
   const option = props.options.find((option) => option.value === value);
@@ -133,16 +134,40 @@ const generateFilterOptions = (searchValue: string) => {
 const onFilter = () => {
   generateFilterOptions(states.inputValue);
 };
+const filteredPlaceholder = computed(() => {
+  return props.filterable && states.selectedOption && isDropdownShow.value
+    ? states.selectedOption.label
+    : props.placeholder;
+});
 const controlDropdown = (show: boolean) => {
   if (show) {
+    // filter 模式
+    // 之前选择过对应的值
+    if (props.filterable && states.selectedOption) {
+      states.inputValue = "";
+    }
+    // 进行一次默认选项的生成
+    if (props.filterable) {
+      generateFilterOptions(states.inputValue);
+    }
     tooltipRef.value.show();
   } else {
     tooltipRef.value.hide();
+    // blur 时候将之前的值回灌到 input 中
+    if (props.filterable) {
+      states.inputValue = states.selectedOption
+        ? states.selectedOption.label
+        : "";
+    }
   }
   isDropdownShow.value = show;
   emits("visible-change", show);
 };
 const showClearIcon = computed(() => {
+  // * hover 上去
+  // * props.clearable 为 true
+  // 必须要有选择过选项
+  // Input 的值不能为空
   return (
     props.clearable &&
     states.mouseHover &&
