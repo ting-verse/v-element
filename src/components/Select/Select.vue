@@ -3,6 +3,8 @@
     class="vk-select"
     :class="{ 'is-disabled': disabled }"
     @click="toggleDropdown"
+    @mouseenter="states.mouseHover = true"
+    @mouseleave="states.mouseHover = false"
   >
     <Tooltip
       placement="bottom-start"
@@ -20,6 +22,14 @@
       >
         <template #suffix>
           <Icon
+            icon="circle-xmark"
+            v-if="showClearIcon"
+            class="vk-input__clear"
+            @mousedown.prevent="NOOP"
+            @click.stop="onClear"
+          ></Icon>
+          <Icon
+            v-else
             icon="angle-down"
             class="header-angle"
             :class="{ 'is-active': isDropdownShow }"
@@ -47,7 +57,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import type { Ref } from "vue";
 import type {
   SelectProps,
@@ -76,6 +86,7 @@ const inputRef = ref() as Ref<InputInstance>;
 const states = reactive<SelectStates>({
   inputValue: initialOption ? initialOption.label : "",
   selectedOption: initialOption,
+  mouseHover: false,
 });
 const isDropdownShow = ref(false);
 const popperOptions: any = {
@@ -106,6 +117,22 @@ const controlDropdown = (show: boolean) => {
   isDropdownShow.value = show;
   emits("visible-change", show);
 };
+const showClearIcon = computed(() => {
+  return (
+    props.clearable &&
+    states.mouseHover &&
+    states.selectedOption &&
+    states.inputValue.trim() !== ""
+  );
+});
+const onClear = () => {
+  states.selectedOption = null;
+  states.inputValue = "";
+  emits("clear");
+  emits("change", "");
+  emits("update:modelValue", "");
+};
+const NOOP = () => {};
 const toggleDropdown = () => {
   if (props.disabled) return;
   if (isDropdownShow.value) {

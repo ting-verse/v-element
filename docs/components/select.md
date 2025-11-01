@@ -12,4 +12,11 @@ description: Select 组件的文档
 
 <preview path="../demo/Select/Basic.vue" title="基础选择器" description="Select 基础选择器"></preview>
 
+## 可清空单选
+
+您可以使用清除图标来清除选择。
+
+设置 `clearable` 属性，则可将选择器清空。
+
+<preview path="../demo/Select/Clear.vue" title="可清空单选" description="Select 可清空单选"></preview>
 
