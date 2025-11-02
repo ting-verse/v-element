@@ -1,5 +1,12 @@
 <template>
-  <div class="vk-form-item">
+  <div
+    class="vk-form-item"
+    :class="{
+      'is-error': validateStatus.state === 'error',
+      'is-success': validateStatus.state === 'success',
+      'is-loading': validateStatus.loading,
+    }"
+  >
     <label class="vk-form-item__label">
       <slot name="label" :label="label">
         {{ label }}
@@ -7,24 +14,34 @@
     </label>
     <div class="vk-form-item__content">
       <slot />
+      <div
+        class="vk-form-item__error-msg"
+        v-if="validateStatus.state === 'error'"
+      >
+        {{ validateStatus.errorMsg }}
+      </div>
     </div>
     {{ innerValue }} - {{ itemRules }}
     <button @click.prevent="validate">Validate</button>
   </div>
 </template>
 <script setup lang="ts">
-import { inject, computed } from "vue";
+import { inject, computed, reactive } from "vue";
 import Schema from "async-validator";
 import { isNil } from "lodash-es";
 import { formContextKey } from "./types";
-import type { FormItemProps } from "./types";
+import type { FormItemProps, FormValidateFailure } from "./types";
 defineOptions({
   name: "VkFormItem",
 });
 const props = defineProps<FormItemProps>();
 
 const formContext = inject(formContextKey);
-
+const validateStatus = reactive({
+  state: "init",
+  errorMsg: "",
+  loading: false,
+});
 const innerValue = computed(() => {
   const model = formContext?.model;
   if (model && props.prop && !isNil(model[props.prop])) {
@@ -48,13 +65,21 @@ const validate = () => {
     const validator = new Schema({
       [modelName]: itemRules.value,
     });
+    validateStatus.loading = true;
     validator
       .validate({ [modelName]: innerValue.value })
       .then(() => {
-        console.log("no error");
+        validateStatus.state = "success";
       })
-      .catch((e) => {
+      .catch((e: FormValidateFailure) => {
+        const { errors } = e;
+        validateStatus.state = "error";
+        validateStatus.errorMsg =
+          errors && errors.length > 0 ? errors[0].message || "" : "";
         console.log(e.errors);
+      })
+      .finally(() => {
+        validateStatus.loading = false;
       });
   }
 };
