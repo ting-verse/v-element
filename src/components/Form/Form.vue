@@ -1,12 +1,13 @@
 <template>
   <form class="vk-form">
     <slot></slot>
+    <button @click.prevent="validate">Validate All</button>
   </form>
 </template>
 
 <script setup lang="ts">
 import { provide } from "vue";
-import type { FormProps } from "./types";
+import type { FormProps, FormItemContext, FormContext } from "./types";
 import { formContextKey } from "./types";
 
 defineOptions({
@@ -14,5 +15,23 @@ defineOptions({
 });
 const props = defineProps<FormProps>();
 
-provide(formContextKey, props);
+const fields: FormItemContext[] = [];
+
+const addField: FormContext["addField"] = (field) => {
+  fields.push(field);
+};
+const removeField: FormContext["removeField"] = (field) => {
+  if (field.prop) {
+    fields.splice(fields.indexOf(field), 1);
+  }
+};
+const validate = () => {
+  console.log("fields", fields);
+};
+
+provide(formContextKey, {
+  ...props,
+  addField,
+  removeField,
+});
 </script>

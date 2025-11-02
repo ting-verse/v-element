@@ -25,7 +25,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { inject, computed, reactive, provide } from "vue";
+import {
+  inject,
+  computed,
+  reactive,
+  provide,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import Schema from "async-validator";
 import { isNil } from "lodash-es";
 import { formContextKey, formItemContextKey } from "./types";
@@ -105,6 +112,16 @@ const validate = (trigger?: string) => {
 
 const context: FormItemContext = {
   validate,
+  prop: props.prop || "",
 };
 provide(formItemContextKey, context);
+
+onMounted(() => {
+  if (props.prop) {
+    formContext?.addField(context);
+  }
+});
+onUnmounted(() => {
+  formContext?.removeField(context);
+});
 </script>
