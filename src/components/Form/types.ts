@@ -35,6 +35,10 @@ export interface FormValidateFailure {
   fields: ValidateFieldsError;
 }
 
+export interface FormInstance {
+  validate: () => Promise<any>;
+}
+
 export const formContextKey: InjectionKey<FormContext> =
   Symbol("formContextKey");
 export const formItemContextKey: InjectionKey<FormItemContext> =

@@ -7,7 +7,14 @@
 
 <script setup lang="ts">
 import { provide } from "vue";
-import type { FormProps, FormItemContext, FormContext } from "./types";
+import type { ValidateFieldsError } from "async-validator";
+import type {
+  FormProps,
+  FormItemContext,
+  FormContext,
+  FormValidateFailure,
+  FormInstance,
+} from "./types";
 import { formContextKey } from "./types";
 
 defineOptions({
@@ -25,8 +32,21 @@ const removeField: FormContext["removeField"] = (field) => {
     fields.splice(fields.indexOf(field), 1);
   }
 };
-const validate = () => {
-  console.log("fields", fields);
+const validate = async () => {
+  let validationErrors: ValidateFieldsError = {};
+  for (const field of fields) {
+    try {
+      await field.validate("");
+    } catch (e) {
+      const error = e as FormValidateFailure;
+      validationErrors = { ...validationErrors, ...error.fields };
+    }
+  }
+  if (Object.keys(validationErrors).length === 0) {
+    return true;
+  } else {
+    return Promise.reject(validationErrors);
+  }
 };
 
 provide(formContextKey, {
@@ -34,4 +54,6 @@ provide(formContextKey, {
   addField,
   removeField,
 });
+
+defineExpose<FormInstance>({ validate });
 </script>
