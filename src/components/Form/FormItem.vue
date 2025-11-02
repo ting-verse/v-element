@@ -13,7 +13,7 @@
       </slot>
     </label>
     <div class="vk-form-item__content">
-      <slot />
+      <slot :validate="validate" />
       <div
         class="vk-form-item__error-msg"
         v-if="validateStatus.state === 'error'"
@@ -26,11 +26,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { inject, computed, reactive } from "vue";
+import { inject, computed, reactive, provide } from "vue";
 import Schema from "async-validator";
 import { isNil } from "lodash-es";
-import { formContextKey } from "./types";
-import type { FormItemProps, FormValidateFailure } from "./types";
+import { formContextKey, formItemContextKey } from "./types";
+import type {
+  FormItemProps,
+  FormValidateFailure,
+  FormItemContext,
+} from "./types";
 defineOptions({
   name: "VkFormItem",
 });
@@ -83,4 +87,9 @@ const validate = () => {
       });
   }
 };
+
+const context: FormItemContext = {
+  validate,
+};
+provide(formItemContextKey, context);
 </script>

@@ -95,10 +95,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, computed, useAttrs, nextTick } from "vue";
+import { ref, watch, computed, useAttrs, nextTick, inject } from "vue";
 import type { Ref } from "vue";
 import type { InputProps, InputEmits } from "./types";
 import Icon from "../Icon/Icon.vue";
+import { formItemContextKey } from "../Form/types";
 
 defineOptions({
   name: "VkInput",
@@ -114,6 +115,10 @@ const innerValue = ref(props.modelValue);
 const isFocus = ref(false);
 const passwordVisible = ref(false);
 const inputRef = ref() as Ref<HTMLInputElement>;
+const formItemContext = inject(formItemContextKey);
+const runValidation = () => {
+  formItemContext?.validate();
+};
 
 const showClear = computed(
   () =>
@@ -145,6 +150,7 @@ const handleBlur = (event: FocusEvent) => {
   console.log("blur triggered");
   isFocus.value = false;
   emits("blur", event);
+  runValidation();
 };
 const clear = () => {
   console.log("clear triggered");
