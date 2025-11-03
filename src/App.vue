@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, h } from "vue";
+import { ref, onMounted, h, inject } from "vue";
 import Dropdown from "./components/Dropdown/Dropdown.vue";
 import type { MenuOption } from "./components/Dropdown/types";
 import Button from "./components/Button/Button.vue";
@@ -30,6 +30,7 @@ const close = () => {
 const inlineConsole = (...args: any) => {
   console.log(...args);
 };
+console.log(inject("test"));
 onMounted(() => {
   createMessage({ message: "hello world", duration: 0, showClose: true });
   createMessage({
@@ -79,7 +80,9 @@ onMounted(() => {
 
   <Icon icon="arrow-up" :size="size" type="danger" color="#0e7a0d" />
   <main>
+    {{ $echo("viking") }}
     <Button ref="buttonRef" @click="open">Test Button</Button>
+    <v-button round>Round Button</v-button>
     <Button plain @click="close">Plain Button</Button>
     <Button round>Round Button</Button>
     <Button circle>VK</Button>
