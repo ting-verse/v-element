@@ -5,6 +5,7 @@ import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import eslint from "vite-plugin-eslint";
 import VueMacros from "unplugin-vue-macros";
+import dts from "vite-plugin-dts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,6 +17,9 @@ export default defineConfig({
       },
     }),
     eslint(),
+    dts({
+      tsconfigPath: "./tsconfig.build.json",
+    }),
   ],
   resolve: {
     alias: {
