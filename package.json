@@ -1,8 +1,20 @@
 {
   "name": "v-element",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "",
   "type": "module",
+  "author": "Ting Chen",
+  "license": "MIT",
+  "keywords": [
+    "Component",
+    "UI",
+    "Vue3"
+  ],
+  "homepage": "https://github.com/ting-verse/v-element",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ting-verse/v-element"
+  },
   "files": [
     "dist"
   ],
