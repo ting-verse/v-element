@@ -115,11 +115,11 @@ const innerValue = ref(props.modelValue);
 const isFocus = ref(false);
 const passwordVisible = ref(false);
 const inputRef = ref() as Ref<HTMLInputElement>;
+
 const formItemContext = inject(formItemContextKey);
 const runValidation = (trigger?: string) => {
-  formItemContext?.validate(trigger);
+  formItemContext?.validate(trigger).catch((e) => console.log(e.errors));
 };
-
 const showClear = computed(
   () =>
     props.clearable && !props.disabled && !!innerValue.value && isFocus.value

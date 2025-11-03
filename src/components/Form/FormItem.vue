@@ -40,6 +40,8 @@ import type {
   FormItemProps,
   FormValidateFailure,
   FormItemContext,
+  ValidateStatusProp,
+  FormItemInstance,
 } from "./types";
 defineOptions({
   name: "VkFormItem",
@@ -47,7 +49,7 @@ defineOptions({
 const props = defineProps<FormItemProps>();
 
 const formContext = inject(formContextKey);
-const validateStatus = reactive({
+const validateStatus: ValidateStatusProp = reactive({
   state: "init",
   errorMsg: "",
   loading: false,
@@ -86,7 +88,7 @@ const getTriggeredRules = (trigger?: string) => {
   }
 };
 
-const validate = (trigger?: string) => {
+const validate = async (trigger?: string) => {
   const modelName = props.prop;
   const triggeredRules = getTriggeredRules(trigger);
   if (triggeredRules.length === 0) {
@@ -143,5 +145,11 @@ onMounted(() => {
 });
 onUnmounted(() => {
   formContext?.removeField(context);
+});
+defineExpose<FormItemInstance>({
+  validateStatus,
+  validate,
+  resetField,
+  clearValidate,
 });
 </script>
