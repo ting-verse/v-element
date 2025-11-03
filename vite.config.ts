@@ -33,11 +33,22 @@ export default defineConfig({
       fileName: "v-element",
     },
     rollupOptions: {
-      external: ["vue"],
+      external: [
+        "vue",
+        "@fortawesome/fontawesome-svg-core",
+        "@fortawesome/free-solid-svg-icons",
+        "@fortawesome/vue-fontawesome",
+      ],
       output: {
         exports: "named",
         globals: {
           vue: "Vue",
+        },
+        assetFileNames: (chunkInfo) => {
+          if (chunkInfo.name === "style.css") {
+            return "index.css";
+          }
+          return chunkInfo.name as string;
         },
       },
     },
