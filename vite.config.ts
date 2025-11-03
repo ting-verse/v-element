@@ -28,5 +28,14 @@ export default defineConfig({
       name: "VElement",
       fileName: "v-element",
     },
+    rollupOptions: {
+      external: ["vue"],
+      output: {
+        exports: "named",
+        globals: {
+          vue: "Vue",
+        },
+      },
+    },
   },
 });
