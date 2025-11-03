@@ -1,6 +1,6 @@
 {
-  "name": "v-element",
-  "version": "1.0.0",
+  "name": "@ting-verse/element",
+  "version": "1.0.2",
   "description": "",
   "type": "module",
   "author": "Ting Chen",
@@ -47,7 +47,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
