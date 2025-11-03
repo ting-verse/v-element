@@ -1,7 +1,6 @@
 <template>
   <form class="vk-form">
     <slot></slot>
-    <button @click.prevent="validate">Validate All</button>
   </form>
 </template>
 

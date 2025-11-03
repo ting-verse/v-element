@@ -5,6 +5,7 @@
       'is-error': validateStatus.state === 'error',
       'is-success': validateStatus.state === 'success',
       'is-loading': validateStatus.loading,
+      'is-required': isRequired,
     }"
   >
     <label class="vk-form-item__label">
@@ -21,7 +22,6 @@
         {{ validateStatus.errorMsg }}
       </div>
     </div>
-    {{ innerValue }} - {{ itemRules }}
   </div>
 </template>
 <script setup lang="ts">
@@ -71,6 +71,9 @@ const itemRules = computed(() => {
   }
 });
 
+const isRequired = computed(() => {
+  return itemRules.value.some((rule) => rule.required);
+});
 const getTriggeredRules = (trigger?: string) => {
   const rules = itemRules.value;
   if (rules) {
