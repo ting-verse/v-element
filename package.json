@@ -6,19 +6,22 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/v-element.umd.cjs",
-  "module": "./dist/v-element.js",
+  "main": "./dist/umd/v-element.umd.cjs",
+  "module": "./dist/es/v-element.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/v-element.js",
-      "required": "./dist/v-element.umd.cjs"
+      "import": "./dist/es/v-element.js",
+      "required": "./dist/umd/v-element.umd.cjs"
     }
   },
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
+    "build": "run-p build-es build-umd",
     "preview": "vite preview",
     "build-only": "vite build",
+    "build-umd": "vite build --config vite.umd.config.ts",
+    "build-es": "vite build --config vite.es.config.ts",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "docs:dev": "vitepress dev docs",
