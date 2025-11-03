@@ -1,10 +1,10 @@
-import { fileURLToPath, URL } from 'node:url'
-
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
-import eslint from 'vite-plugin-eslint'
-import VueMacros from 'unplugin-vue-macros'
+import { fileURLToPath, URL } from "node:url";
+import { resolve } from "path";
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
+import eslint from "vite-plugin-eslint";
+import VueMacros from "unplugin-vue-macros";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,11 +15,18 @@ export default defineConfig({
         vueJsx: vueJsx(),
       },
     }),
-    eslint()
+    eslint(),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
-})
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  build: {
+    lib: {
+      entry: resolve(__dirname, "src/index.ts"),
+      name: "VElement",
+      fileName: "v-element",
+    },
+  },
+});
