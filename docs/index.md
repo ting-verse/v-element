@@ -1,25 +1,24 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
-  name: "V Element 组件库"
-  text: "进阶必学！"
-  tagline: 最新 Vue3.3 + TS4 高仿 ElementPlus 打造自己的组件库
+  name: "V Element"
+  text: "轻量 Vue 3 组件体系"
+  tagline: 专注中后台体验的 Vue3 + TS 组件库，覆盖设计、交互与工程化最佳实践。
   actions:
     - theme: brand
-      text: 开始使用
+      text: 快速开始
       link: /get-started
     - theme: alt
-      text: 课程链接
-      link: https://coding.imooc.com/class/693.html
+      text: 查看组件示例
+      link: /components/button
 
 features:
-  - title: “全”
-    details: 精选十几个组件，可以涵盖大部分的主流组件的设计思想以及原理，知识覆盖面全。
-  - title: “新”
-    details: 使用目前2023年 Vue3 周边最新 ，最全技术：Vue3.3 + Typescript4， Vite，Vitest， Vitepress，Vue-test-utils2，Rollup, Postcss 一网打尽。
-  - title: “难”
-    details: 难度逐渐上升，高薪必备敲门砖，包括：Message - Select - Form 这种高难度高复杂组件。
+  - title: 可预测的设计规范
+    details: 基于统一的色彩、尺寸与交互语义，组件实现保持高度一致，方便在大型项目中扩展。
+  - title: 现代化技术栈
+    details: Vue 3.3 + TypeScript 4 + Vite + Vitest，配合 Rollup、PostCSS 等工具构建稳定的开发与发布流程。
+  - title: 工程级体验
+    details: 提供完善的文档演示、API 说明与调试工具，帮助团队快速集成并保持高质量交付。
 ---
 
